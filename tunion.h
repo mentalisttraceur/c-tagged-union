@@ -48,11 +48,11 @@ void tunion_set(void * instance, int tag, void * source, size_t size)
     memcpy(instance, &tag, sizeof(int));
     memcpy((unsigned char * )instance + sizeof(int), source, size);
 }
-#define UNION_SET(instance, member, value) tunion_set( \
+#define UNION_SET(instance, member, pointer) tunion_set( \
     &(instance), \
     (member), \
-    (1 ? &(value) : &((instance).tunion.type.member)), \
-    sizeof(value) \
+    (1 ? (pointer) : &((instance).tunion.type.member)), \
+    sizeof(*(pointer)) \
 )
 static
 int tunion_get(void * instance, int tag, void * destination, size_t size)
