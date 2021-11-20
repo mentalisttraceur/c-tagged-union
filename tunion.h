@@ -37,9 +37,9 @@ union name \
 #define TUNION_ENUM(member) TUNION_DELETE_TYPE member
 #define TUNION_UNWRAP_TYPE(type) type
 #define TUNION_DELETE_TYPE(type)
-#define TUNION_COMMA TUNION_COMMA_ TUNION_EMPTY() ()
+#define TUNION_COMMA TUNION_COMMA_ TUNION_EMPTY ()
 #define TUNION_COMMA_() ,
-#define TUNION_EMPTY()
+#define TUNION_EMPTY
 
 static
 void tunion_set(void * instance, int tag, void * source, size_t size)
