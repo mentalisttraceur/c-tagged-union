@@ -1,19 +1,15 @@
 /* SPDX-License-Identifier: 0BSD */
 /* Copyright 2021 Alexander Kozhevnikov <mentalisttraceur@gmail.com> */
 
-#include <stddef.h> /* size_t */
+#include <stddef.h> /* offsetof, size_t */
 #include <string.h> /* memcpy */
 
 #define DECLARE_UNION(name, members) \
 union name \
 { \
-    struct \
+    union \
     { \
-        int tag; \
-        union \
-        { \
-            TUNION_WALK(TUNION_UNION_1 members) \
-        } type; \
+        TUNION_WALK(TUNION_UNION_1 members) \
     } unsafe; \
     int:(0 & sizeof( \
         enum \
@@ -33,28 +29,36 @@ union name \
 #define TUNION_ENUM_2(member) TUNION_COMMA TUNION_ENUM(member) TUNION_ENUM_1
 #define TUNION_ENUM_1_END
 #define TUNION_ENUM_2_END
-#define TUNION_UNION(member) TUNION_UNWRAP_TYPE member;
+#define TUNION_UNION(member) \
+    struct TUNION_MEMBER TUNION_EMPTY (TUNION_DELETE_TYPE member) \
+    { \
+        int tag; \
+        TUNION_UNWRAP_TYPE member; \
+    } TUNION_DELETE_TYPE member;
 #define TUNION_ENUM(member) TUNION_DELETE_TYPE member
 #define TUNION_UNWRAP_TYPE(type) type
 #define TUNION_DELETE_TYPE(type)
 #define TUNION_COMMA TUNION_COMMA_ TUNION_EMPTY ()
 #define TUNION_COMMA_() ,
 #define TUNION_EMPTY
+#define TUNION_MEMBER(name) tunion_member_##name
 
 static
-void tunion_set(void * instance, int tag, void * source, size_t size)
+void * tunion_set_tag(void * instance, int tag)
 {
-    memcpy(instance, &tag, sizeof(int));
-    memcpy((unsigned char * )instance + sizeof(int), source, size);
+    return memcpy(instance, &tag, sizeof(int));
 }
-#define UNION_SET(instance, member, pointer) tunion_set( \
-    &(instance), \
-    (member), \
-    (1 ? (pointer) : &((instance).unsafe.type.member)), \
-    sizeof(*(pointer)) \
+#define UNION_SET(instance, member, value) \
+( \
+    ( \
+        (struct tunion_member_##member * ) \
+            tunion_set_tag(&((instance).unsafe.member), (member)) \
+    )->member = (value) \
 )
 static
-int tunion_get(void * instance, int tag, void * destination, size_t size)
+int tunion_get(
+    void * instance, int tag, void * destination, size_t size, size_t offset
+)
 {
     int tag_;
     memcpy(&tag_, instance, sizeof(int));
@@ -62,12 +66,13 @@ int tunion_get(void * instance, int tag, void * destination, size_t size)
     {
         return 0;
     }
-    memcpy(destination, (unsigned char * )instance + sizeof(int), size);
+    memcpy(destination, (unsigned char * )instance + offset, size);
     return 1;
 }
 #define UNION_GET(instance, member, pointer) tunion_get( \
     &(instance), \
     (member), \
-    (1 ? (pointer) : &((instance).unsafe.type.member)), \
-    sizeof(*(pointer)) \
+    (1 ? (pointer) : &((instance).unsafe.member.member)), \
+    sizeof(*(pointer)), \
+    offsetof(struct tunion_member_##member, member) \
 )

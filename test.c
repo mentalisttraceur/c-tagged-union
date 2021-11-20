@@ -29,13 +29,13 @@ void test_evaluated_only_once(union my_union m)
     struct b b = {13};
     *xa = 0;
     *ma = m;
-    UNION_SET(*mp++, my_union_x, xp++);
+    UNION_SET(*mp++, my_union_x, *xp++);
     if(--mp == ma) fputs("set evaluated union once\n", stdout);
     if(--xp == xa) fputs("set evaluated value once\n", stdout);
     UNION_GET(*mp++, my_union_x, xp++);
     if(--mp == ma) fputs("get success evaluated union once\n", stdout);
     if(--xp == xa) fputs("get success evaluated value once\n", stdout);
-    UNION_SET(*mp, my_union_y, &b);
+    UNION_SET(*mp, my_union_y, b);
     UNION_GET(*mp++, my_union_x, xp++);
     if(--mp == ma) fputs("get failure evaluated union once\n", stdout);
     if(--xp == xa) fputs("get failure evaluated value once\n", stdout);
@@ -47,20 +47,26 @@ int main(int argc, char * * argv)
     union my_union m;
     struct b b = {13};
     int x, y;
-    UNION_SET(m, my_union_x, &argc);
+    UNION_SET(m, my_union_x, argc);
     try_all_three(m);
-    UNION_SET(m, my_union_y, &b);
+    UNION_SET(m, my_union_y, b);
     try_all_three(m);
-    UNION_SET(m, my_union_z, argv);
+    UNION_SET(m, my_union_z, *argv);
     try_all_three(m);
     test_evaluated_only_once(m);
     x = 12345;
     y = 2;
-    UNION_SET(m, my_union_y, &b);
+    UNION_SET(m, my_union_y, b);
     UNION_GET(m, my_union_x, &x);
     if(x == 12345) fputs("get noop works\n", stdout);
-    UNION_SET(m, my_union_x, &x);
+    UNION_SET(m, my_union_x, x);
     UNION_GET(m, my_union_x, &y);
     if(x == y) fputs("set get copy works\n", stdout);
+    if(x == UNION_SET(m, my_union_x, x))
+        fputs("set passthrough x\n", stdout);
+    if(b.b == UNION_SET(m, my_union_y, b).b)
+        fputs("set passthrough y\n", stdout);
+    if(*argv == UNION_SET(m, my_union_z, *argv))
+        fputs("set passthrough z\n", stdout);
     return 0;
 }
