@@ -46,6 +46,7 @@ int main(int argc, char * * argv)
 {
     union my_union m;
     struct b b = {13};
+    int x, y;
     UNION_SET(m, my_union_x, &argc);
     try_all_three(m);
     UNION_SET(m, my_union_y, &b);
@@ -53,5 +54,13 @@ int main(int argc, char * * argv)
     UNION_SET(m, my_union_z, argv);
     try_all_three(m);
     test_evaluated_only_once(m);
+    x = 12345;
+    y = 2;
+    UNION_SET(m, my_union_y, &b);
+    UNION_GET(m, my_union_x, &x);
+    if(x == 12345) fputs("get noop works\n", stdout);
+    UNION_SET(m, my_union_x, &x);
+    UNION_GET(m, my_union_x, &y);
+    if(x == y) fputs("set get copy works\n", stdout);
     return 0;
 }
