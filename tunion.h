@@ -24,17 +24,17 @@ union name \
 }
 #define TUNION_CATENATE(left, right) left##right
 #define TUNION_WALK(macro_and_members) TUNION_CATENATE(macro_and_members, _END)
-#define TUNION_UNION_1(member) TUNION_UNWRAP_TYPE member; TUNION_UNION_2
-#define TUNION_UNION_2(member) TUNION_UNWRAP_TYPE member; TUNION_UNION_1
+#define TUNION_UNION_1(member) TUNION_UNION(member) TUNION_UNION_2
+#define TUNION_UNION_2(member) TUNION_UNION(member) TUNION_UNION_1
 #define TUNION_UNION_1_END
 #define TUNION_UNION_2_END
-#define TUNION_ENUM_0(member) TUNION_DELETE_TYPE member TUNION_ENUM_1
-#define TUNION_ENUM_1(member) \
-    TUNION_COMMA TUNION_DELETE_TYPE member TUNION_ENUM_2
-#define TUNION_ENUM_2(member) \
-    TUNION_COMMA TUNION_DELETE_TYPE member TUNION_ENUM_1
+#define TUNION_ENUM_0(member) TUNION_ENUM(member) TUNION_ENUM_1
+#define TUNION_ENUM_1(member) TUNION_COMMA TUNION_ENUM(member) TUNION_ENUM_2
+#define TUNION_ENUM_2(member) TUNION_COMMA TUNION_ENUM(member) TUNION_ENUM_1
 #define TUNION_ENUM_1_END
 #define TUNION_ENUM_2_END
+#define TUNION_UNION(member) TUNION_UNWRAP_TYPE member;
+#define TUNION_ENUM(member) TUNION_DELETE_TYPE member
 #define TUNION_UNWRAP_TYPE(type) type
 #define TUNION_DELETE_TYPE(type)
 #define TUNION_COMMA TUNION_COMMA_ TUNION_EMPTY() ()
