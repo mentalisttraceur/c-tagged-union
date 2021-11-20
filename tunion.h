@@ -14,7 +14,7 @@ union name \
         { \
             TUNION_WALK(TUNION_UNION_1 members) \
         } type; \
-    } tunion; \
+    } unsafe; \
     int:(0 & sizeof( \
         enum \
         { \
@@ -50,7 +50,7 @@ void tunion_set(void * instance, int tag, void * source, size_t size)
 #define UNION_SET(instance, member, pointer) tunion_set( \
     &(instance), \
     (member), \
-    (1 ? (pointer) : &((instance).tunion.type.member)), \
+    (1 ? (pointer) : &((instance).unsafe.type.member)), \
     sizeof(*(pointer)) \
 )
 static
@@ -68,6 +68,6 @@ int tunion_get(void * instance, int tag, void * destination, size_t size)
 #define UNION_GET(instance, member, pointer) tunion_get( \
     &(instance), \
     (member), \
-    (1 ? (pointer) : &((instance).tunion.type.member)), \
+    (1 ? (pointer) : &((instance).unsafe.type.member)), \
     sizeof(*(pointer)) \
 )
