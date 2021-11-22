@@ -60,9 +60,7 @@ through normal C syntax is *not* supported. Tagged
 unions are defined to make the naive way of trying
 this simply not compile, and the members that are
 accessible on the union with C syntax are private
-implementation details which are subject to change
-and are not even guaranteed to be aligned with how
-the macros store data in the union on all systems.
+implementation details which are subject to change.
 
 
 
