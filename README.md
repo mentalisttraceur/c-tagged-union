@@ -32,11 +32,7 @@ in this repo.
 
 The macro `DECLARE_UNION` expands to a C `union`
 type declaration, and should be valid anywhere
-a union declaration is valid, but bear in mind
-that each tagged union's member names are also
-`enum` constants, so multiple definitions with
-the same member names in the same scope will be
-rejected by the compiler.
+a union declaration is valid.
 
 The macro `UNION_SET` assigns a value to a member
 of a tagged union, and sets the tag to match.

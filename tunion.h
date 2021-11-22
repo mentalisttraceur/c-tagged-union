@@ -12,40 +12,74 @@ union name \
 { \
     union \
     { \
-        TUNION_WALK(TUNION_UNION_1 members) \
+        TUNION_REDUCE(TUNION_UNION, name, members) \
     } unsafe; \
-    int:(0 * sizeof( \
-        enum \
+    int:(0 * sizeof(union { \
+        struct tunion_enum_##name \
         { \
-            TUNION_WALK(TUNION_ENUM_0 members) \
-        } \
-    )); \
+            TUNION_REDUCE(TUNION_ENUM, name, members) \
+        } name; \
+        TUNION_REDUCE(TUNION_ALIAS, name, members) \
+    })); \
 }
-#define TUNION_CATENATE(left, right) left##right
-#define TUNION_WALK(macro_and_members) TUNION_CATENATE(macro_and_members, _END)
-#define TUNION_UNION_1(member) TUNION_UNION(member) TUNION_UNION_2
-#define TUNION_UNION_2(member) TUNION_UNION(member) TUNION_UNION_1
-#define TUNION_UNION_1_END
-#define TUNION_UNION_2_END
-#define TUNION_ENUM_0(member) TUNION_ENUM(member) TUNION_ENUM_1
-#define TUNION_ENUM_1(member) TUNION_COMMA TUNION_EMPTY () \
-    TUNION_ENUM(member) TUNION_ENUM_2
-#define TUNION_ENUM_2(member) TUNION_COMMA TUNION_EMPTY () \
-    TUNION_ENUM(member) TUNION_ENUM_1
-#define TUNION_ENUM_1_END
-#define TUNION_ENUM_2_END
-#define TUNION_UNION(member) \
-    struct TUNION_MEMBER TUNION_EMPTY (TUNION_DELETE member) \
+
+#define TUNION_UNION(_, member) \
+    TUNION_MEMBER_STRUCT(TUNION_DELETE member) \
     { \
         int tag; \
         TUNION_UNWRAP member; \
     } TUNION_DELETE member;
-#define TUNION_ENUM(member) TUNION_DELETE member
-#define TUNION_UNWRAP(x) x
+#define TUNION_MEMBER_STRUCT(name) struct TUNION_CATENATE(tunion_member_, name)
+
+#define TUNION_ENUM(_, member) char TUNION_DELETE member;
+
+#define TUNION_ALIAS(name, member) \
+    TUNION_ENUM_STRUCT(TUNION_DELETE member) \
+    { \
+        TUNION_ENUM_STRUCT(name) tunion; \
+    } TUNION_DELETE member;
+#define TUNION_ENUM_STRUCT(name) struct TUNION_CATENATE(tunion_enum_, name)
+
 #define TUNION_DELETE(x)
-#define TUNION_COMMA() ,
-#define TUNION_EMPTY
-#define TUNION_MEMBER(name) tunion_member_##name
+#define TUNION_UNWRAP(x) x
+#define TUNION_CATENATE(left, right) left##right
+
+#define TUNION_REDUCE(macro, state, sequence) \
+    TUNION_TRIM( \
+        TUNION_WALK(TUNION_OPEN_1 sequence) \
+        ()(macro)state \
+        TUNION_WALK(TUNION_CLOSE_1 sequence) \
+    )
+
+#define TUNION_TRIM(result_macro_state) TUNION_FIRST(result_macro_state)
+#define TUNION_FIRST(sequence) TUNION_FIRST_ sequence)
+#define TUNION_FIRST_(x) x TUNION_DELETE(
+
+#define TUNION_WALK(macro_sequence) TUNION_CATENATE(macro_sequence, _END)
+
+#define TUNION_OPEN_1(x) \
+    TUNION_STEP TUNION_OPEN TUNION_UNWRAP() () TUNION_OPEN_2
+#define TUNION_OPEN_2(x) \
+    TUNION_STEP TUNION_OPEN TUNION_UNWRAP() () TUNION_OPEN_1
+#define TUNION_OPEN_1_END
+#define TUNION_OPEN_2_END
+#define TUNION_OPEN() (
+
+#define TUNION_CLOSE_1(x) TUNION_CLOSE TUNION_UNWRAP() (x) TUNION_CLOSE_2
+#define TUNION_CLOSE_2(x) TUNION_CLOSE TUNION_UNWRAP() (x) TUNION_CLOSE_1
+#define TUNION_CLOSE_1_END
+#define TUNION_CLOSE_2_END
+#define TUNION_CLOSE(x) , x)
+
+#define TUNION_STEP(result_macro_state, x) \
+    ( \
+        TUNION_FIRST(result_macro_state) \
+        TUNION_FIRST(TUNION_DELETE result_macro_state) \
+        (TUNION_DELETE TUNION_DELETE result_macro_state, x) \
+    ) \
+    (TUNION_FIRST(TUNION_DELETE result_macro_state)) \
+    TUNION_DELETE TUNION_DELETE result_macro_state
+
 
 static
 void * tunion_set_tag(void * instance, int tag)
@@ -54,10 +88,10 @@ void * tunion_set_tag(void * instance, int tag)
 }
 #define UNION_SET(instance, member, value) \
 ( \
-    ( \
-        (struct tunion_member_##member * ) \
-            tunion_set_tag(&((instance).unsafe.member), (member)) \
-    )->member = (value) \
+    ((struct tunion_member_##member * ) tunion_set_tag( \
+        &((instance).unsafe.member), \
+        offsetof(struct tunion_enum_##member, tunion.member) \
+    ))->member = (value) \
 )
 static
 int tunion_get(
@@ -75,7 +109,7 @@ int tunion_get(
 }
 #define UNION_GET(instance, member, pointer) tunion_get( \
     &(instance), \
-    (member), \
+    offsetof(struct tunion_enum_##member, tunion.member), \
     (1 ? (pointer) : &((instance).unsafe.member.member)), \
     sizeof(*(pointer)), \
     offsetof(struct tunion_member_##member, member) \
