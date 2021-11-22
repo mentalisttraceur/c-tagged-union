@@ -35,14 +35,14 @@ union name \
 #define TUNION_ENUM_1_END
 #define TUNION_ENUM_2_END
 #define TUNION_UNION(member) \
-    struct TUNION_MEMBER TUNION_EMPTY (TUNION_DELETE_TYPE member) \
+    struct TUNION_MEMBER TUNION_EMPTY (TUNION_DELETE member) \
     { \
         int tag; \
-        TUNION_UNWRAP_TYPE member; \
-    } TUNION_DELETE_TYPE member;
-#define TUNION_ENUM(member) TUNION_DELETE_TYPE member
-#define TUNION_UNWRAP_TYPE(type) type
-#define TUNION_DELETE_TYPE(type)
+        TUNION_UNWRAP member; \
+    } TUNION_DELETE member;
+#define TUNION_ENUM(member) TUNION_DELETE member
+#define TUNION_UNWRAP(x) x
+#define TUNION_DELETE(x)
 #define TUNION_COMMA() ,
 #define TUNION_EMPTY
 #define TUNION_MEMBER(name) tunion_member_##name
