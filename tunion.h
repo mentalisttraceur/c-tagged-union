@@ -1,6 +1,9 @@
 /* SPDX-License-Identifier: 0BSD */
 /* Copyright 2021 Alexander Kozhevnikov <mentalisttraceur@gmail.com> */
 
+#ifndef TUNION_H
+#define TUNION_H
+
 #include <stddef.h> /* offsetof, size_t */
 #include <string.h> /* memcpy */
 
@@ -76,3 +79,5 @@ int tunion_get(
     sizeof(*(pointer)), \
     offsetof(struct tunion_member_##member, member) \
 )
+
+#endif /* TUNION_H */
