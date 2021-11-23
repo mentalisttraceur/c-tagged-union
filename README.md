@@ -47,27 +47,27 @@ given value pointer if the tag matches. It
 expands to a boolean result which reports
 if the match was successful.
 
-Both `UNION_SET` and `UNION_GET` evaluate each
-of their argumments exactly once.
+Both `UNION_SET` and `UNION_GET` evaluate the tagged
+union argument and the value argument exactly once.
 
 Both `UNION_SET` and `UNION_GET` are written to
 maximize the chances of a compile-time error or
 warning if the value being assigned is not a
 compatible type for that union member type.
 
-Accessing any members on the tagged union directly
-through normal C syntax is *not* supported. Tagged
-unions are defined to make the naive way of trying
-this simply not compile, and the members that are
-accessible on the union with C syntax are private
-implementation details which are subject to change.
-
+Accidental unsafe attempts to access members on the
+tagged union directly through normal C syntax will
+not compile, and intentional ones are explicit and
+obvious, because in the generated union type, the
+tag and value members are nested in a member named
+`unsafe`.
 
 
 ## C Name Collisions
 
 Besides the macros documented as part of the API,
-the `tunion.h` header will only ever define
-identifiers whose first six characters are
-`tunion` or `TUNION`, all of which are private
-and not intended for external use.
+and the union types that you declare through the
+`DECLARE_UNION` macro, the `tunion.h` header will
+only ever define identifiers whose first six
+characters are `tunion` or `TUNION`, all of which
+are private and not intended for external use.
