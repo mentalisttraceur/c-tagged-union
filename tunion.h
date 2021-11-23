@@ -11,7 +11,7 @@ union name \
     { \
         TUNION_WALK(TUNION_UNION_1 members) \
     } unsafe; \
-    int:(0 & sizeof( \
+    int:(0 * sizeof( \
         enum \
         { \
             TUNION_WALK(TUNION_ENUM_0 members) \
