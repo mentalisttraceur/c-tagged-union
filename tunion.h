@@ -51,8 +51,9 @@ union name \
         TUNION_WALK(TUNION_CLOSE_1 sequence) \
     )
 
-#define TUNION_TRIM(result_macro_state) TUNION_FIRST(result_macro_state)
+#define TUNION_TRIM(result_macro_state) TUNION_FIRST2(result_macro_state)
 #define TUNION_FIRST(sequence) TUNION_FIRST_ sequence)
+#define TUNION_FIRST2(sequence) TUNION_FIRST_ sequence)
 #define TUNION_FIRST_(x) x TUNION_DELETE(
 
 #define TUNION_WALK(macro_sequence) TUNION_CATENATE(macro_sequence, _END)
