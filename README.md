@@ -14,15 +14,6 @@ Performs just as good as a manual implementation
 with reasonable compiler optimizations turned on.
 
 
-## Versioning
-
-This library follows the SemVer 2.0.0 specification.
-
-(The current version is `1.0.0-beta` - a pre-release of
-1.0.0, and as such not yet set in stone, but if no flaws
-are found, this will become the actual `1.0.0` release.)
-
-
 ## Usage
 
 The macro `DEFINE_UNION` defines a C `union` type
