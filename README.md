@@ -2,10 +2,10 @@
 
 Trying to bring us the best tagged unions C can buy.
 
+Less boilerplate to write and read, less room for human error.
+
 About as close as we can get in C to type-safe tagged unions,
 with automatic checking at compile-time and run-time.
-
-Less boilerplate to write and read, less room for human error.
 
 The implementation was written very carefully to not
 stray into unportable or undefined behavior at all.
