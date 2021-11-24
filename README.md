@@ -85,7 +85,8 @@ The "get" functions are conditional: if the current tag
 matches the member you are trying to get, they write
 the value of that member to the pointer you passed in,
 and return true; if the tag does not match, they return
-false without trying to write to the pointer:
+false without accessing the member or writing to the
+pointer:
 
 ```c
 my_union_set_foo(instance, 1);
