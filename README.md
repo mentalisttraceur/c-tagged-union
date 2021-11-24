@@ -147,7 +147,8 @@ assert(tagof(my_union, foo) == 1);
 
 Besides `DEFINE_UNION` and `tagof`, the `tunion.h`
 header only defines identifiers whose first six
-characters are `tunion` or `TUNION`.
+characters are `tunion` or `TUNION`. It also
+includes `<stddef.h>`.
 
 Besides defining a union type and helper functions
 as documented, `DEFINE_UNION` will only ever
