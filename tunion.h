@@ -20,7 +20,7 @@ union name \
     } \
     unsafe; \
 }; \
-struct tunion_enum_##name \
+struct tunion_tags_##name \
 { \
     TUNION_REDUCE((TUNION_ENUM)(name)char tunion_nil;, members) \
 }; \
@@ -52,7 +52,7 @@ TUNION_REDUCE((TUNION_GETTER_AND_SETTER)(name), members)
 #define TUNION_METHOD(name, _get_or_set_, member) \
     TUNION_CATENATE TUNION_UNWRAP((name##_get_or_set_, TUNION_DELETE member))
 #define TUNION_TAG(name, member) \
-    offsetof(struct tunion_enum_##name, TUNION_DELETE member)
+    (int )offsetof(struct tunion_tags_##name, TUNION_DELETE member)
 
 #define TUNION_DELETE(x)
 #define TUNION_UNWRAP(x) x
@@ -90,5 +90,7 @@ TUNION_REDUCE((TUNION_GETTER_AND_SETTER)(name), members)
     TUNION_DELETE TUNION_DELETE macro_state_result \
     TUNION_FIRST(macro_state_result) \
         (TUNION_FIRST(TUNION_DELETE macro_state_result), x)
+
+#define tagof(name, member) TUNION_TAG(name, ()member)
 
 #endif /* TUNION_H */

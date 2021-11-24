@@ -133,13 +133,21 @@ Tag values are compile-time constant, non-zero, start
 at one for the first member of a union, and count up
 by one for each member.
 
+The `tagof` macro takes the name of the tagged union
+type and the name of one of its members, and expands
+to an integer constant expression of type `int`
+containing the tag value for that member:
+
+```c
+assert(tagof(my_union, foo) == 1);
+```
+
 
 ## C Name Collisions
 
-Besides `DEFINE_UNION`, the `tunion.h` header only
-defines identifiers whose first six characters are
-`tunion` or `TUNION`, which are all private and
-subject to change.
+Besides `DEFINE_UNION` and `tagof`, the `tunion.h`
+header only defines identifiers whose first six
+characters are `tunion` or `TUNION`.
 
 Besides defining a union type and helper functions
 as documented, `DEFINE_UNION` will only ever

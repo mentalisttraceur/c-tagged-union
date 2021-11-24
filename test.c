@@ -48,6 +48,9 @@ int main(int argc, char * * argv)
     union my_union m;
     struct b b = {13};
     int x, x2;
+    if(tagof(my_union, x) == 1) fputs("tagof x\n", stdout);
+    if(tagof(my_union, y) == 2) fputs("tagof y\n", stdout);
+    if(tagof(my_union, z) == 3) fputs("tagof z\n", stdout);
     my_union_set_x(&m, argc);
     try_all_three(m);
     my_union_set_y(&m, b);
