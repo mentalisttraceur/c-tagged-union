@@ -89,11 +89,13 @@ false without accessing the member or writing to the
 pointer:
 
 ```c
-my_union_set_foo(instance, 1);
-int x;
-float * f;
+int x = 1;
+float * f = 2.0;
+my_union_set_foo(instance, 3);
 assert(my_union_get_foo(instance, &x));
+assert(x == 3);
 assert(!my_union_get_bar(instance, &f));
+assert(f == 2.0);
 ```
 
 This lets you handle all cases of a tagged union like this:
