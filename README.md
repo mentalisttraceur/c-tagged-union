@@ -31,7 +31,7 @@ and tiny `static` getter and setter functions for
 each member. For example, this:
 
 ```c
-#include <tunion.h>
+#include "tagged-union.h"
 
 DEFINE_UNION(my_union,
     ((int) foo)
@@ -145,11 +145,12 @@ assert(tagof(my_union, foo) == 1);
 
 ## C Name Collisions
 
-Besides `DEFINE_UNION` and `tagof`, the `tunion.h`
-header only defines identifiers whose first six
-characters are `tunion` or `TUNION`. It also
-includes `<stddef.h>`.
+Besides `DEFINE_UNION` and `tagof`, the `tagged-union.h`
+header only defines identifiers that start with
+`tagged_union_` or `TAGGED_UNION_`.
 
 Besides defining a union type and helper functions
 as documented, `DEFINE_UNION` will only ever
-define identifiers that start with `tunion`.
+define identifiers that start with `tagged_union_`.
+
+`tagged-union.h` contains `#include <stddef.h>`.

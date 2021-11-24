@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "tunion.h"
+#include "tagged-union.h"
 
 struct b { int b; };
 
