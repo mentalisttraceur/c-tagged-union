@@ -43,6 +43,11 @@ void test_evaluated_only_once(union my_union m)
 }
 
 
+const int xtag = tagof(my_union, x);
+const int ytag = tagof(my_union, y);
+const int ztag = tagof(my_union, z);
+
+
 int main(int argc, char * * argv)
 {
     union my_union m;
@@ -51,6 +56,9 @@ int main(int argc, char * * argv)
     if(tagof(my_union, x) == 1) fputs("tagof x\n", stdout);
     if(tagof(my_union, y) == 2) fputs("tagof y\n", stdout);
     if(tagof(my_union, z) == 3) fputs("tagof z\n", stdout);
+    if(xtag == 1) fputs("tagof x constant expression\n", stdout);
+    if(ytag == 2) fputs("tagof y constant expression\n", stdout);
+    if(ztag == 3) fputs("tagof z constant expression\n", stdout);
     my_union_set_x(&m, argc);
     try_all_three(m);
     my_union_set_y(&m, b);
