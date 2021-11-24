@@ -122,12 +122,9 @@ else
 
 If a tagged union has been zeroed out, or has its tag set
 to zero, for example by `calloc`, `memset`, or setting
-`.unsafe.tag = 0` on it, it is "nil": it has no value and
-all of the getter functions for that union will safely
-return false. (The getters will safely return false for
-any tag value that does not match a union member, but the
-zero tag is specifically reserved for this purpose, so no
-valid member tag will ever have the value zero.)
+`.unsafe.tag = 0` on it, it is "nil": it has no value.
+The zero tag is specifically reserved for this purpose:
+no member will ever be assigned tag value zero.
 
 Tag values are compile-time constant, non-zero, start
 at one for the first member of a union, and count up
