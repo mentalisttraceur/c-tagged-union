@@ -28,39 +28,36 @@ struct tagged_union_tags_##name \
 }; \
 TAGGED_UNION_REDUCE((TAGGED_UNION_GETTER_AND_SETTER)(name), members)
 
-#define TAGGED_UNION_ENUM(_, member) char TAGGED_UNION_DELETE member;
-
 #define TAGGED_UNION_UNION(_, member) TAGGED_UNION_UNWRAP member;
+
+#define TAGGED_UNION_ENUM(_, member) char TAGGED_UNION_DELETE member;
 
 #define TAGGED_UNION_GETTER_AND_SETTER(name, member) \
     static \
-    int TAGGED_UNION_METHOD(name, _get_, member) \
+    int \
+    TAGGED_UNION_SCAN_CATENATE(name##_get_, TAGGED_UNION_DELETE member) \
     (union name instance, TAGGED_UNION_FIRST(member) * value) \
     { \
-        if(instance.unsafe.tag != TAGGED_UNION_TAG(name, member)) \
+        if(instance.unsafe.tag != tagof(name, TAGGED_UNION_DELETE member)) \
             return 0; \
         *value = (instance.unsafe.value. TAGGED_UNION_DELETE member); \
         return 1; \
     } \
     static \
-    TAGGED_UNION_FIRST(member) TAGGED_UNION_METHOD(name, _set_, member) \
+    TAGGED_UNION_FIRST(member) \
+    TAGGED_UNION_SCAN_CATENATE(name##_set_, TAGGED_UNION_DELETE member) \
     (union name * instance, TAGGED_UNION_FIRST(member) value) \
     { \
-        instance->unsafe.tag = TAGGED_UNION_TAG(name, member); \
+        instance->unsafe.tag = tagof(name, TAGGED_UNION_DELETE member); \
         instance->unsafe.value. TAGGED_UNION_DELETE member = value; \
         return value; \
     }
 
-#define TAGGED_UNION_METHOD(name, _get_or_set_, member) \
-    TAGGED_UNION_CATENATE TAGGED_UNION_UNWRAP( \
-        (name##_get_or_set_, TAGGED_UNION_DELETE member) \
-    )
-#define TAGGED_UNION_TAG(name, member) \
-    (int )offsetof(struct tagged_union_tags_##name, TAGGED_UNION_DELETE member)
-
 #define TAGGED_UNION_DELETE(x)
 #define TAGGED_UNION_UNWRAP(x) x
 #define TAGGED_UNION_CATENATE(left, right) left##right
+#define TAGGED_UNION_SCAN_CATENATE(left, right) \
+    TAGGED_UNION_CATENATE(left, right)
 #define TAGGED_UNION_FIRST(sequence) TAGGED_UNION_FIRST_ sequence)
 #define TAGGED_UNION_FIRST_(x) x TAGGED_UNION_DELETE(
 
@@ -101,6 +98,7 @@ TAGGED_UNION_REDUCE((TAGGED_UNION_GETTER_AND_SETTER)(name), members)
     TAGGED_UNION_FIRST(macro_state_result) \
         (TAGGED_UNION_FIRST(TAGGED_UNION_DELETE macro_state_result), x)
 
-#define tagof(name, member) TAGGED_UNION_TAG(name, ()member)
+#define tagof(name, member) \
+    (int )offsetof(struct tagged_union_tags_##name, member)
 
 #endif /* TAGGED_UNION_H */
