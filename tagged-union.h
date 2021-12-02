@@ -7,26 +7,26 @@
 #include <stddef.h> /* offsetof */
 
 #define DEFINE_UNION(name, members) \
-union name \
-{ \
-    struct \
+    union name \
     { \
-        int tag; \
-        union \
+        struct \
         { \
-            TAGGED_UNION_REDUCE((TAGGED_UNION_UNION)(name), members) \
+            int tag; \
+            union \
+            { \
+                TAGGED_UNION_REDUCE((TAGGED_UNION_UNION)(name), members) \
+            } \
+            value; \
         } \
-        value; \
-    } \
-    unsafe; \
-}; \
-struct tagged_union_tags_##name \
-{ \
-    TAGGED_UNION_REDUCE( \
-        (TAGGED_UNION_ENUM)(name)char tagged_union_nil;, members \
-    ) \
-}; \
-TAGGED_UNION_REDUCE((TAGGED_UNION_GETTER_AND_SETTER)(name), members)
+        unsafe; \
+    }; \
+    struct tagged_union_tags_##name \
+    { \
+        TAGGED_UNION_REDUCE( \
+            (TAGGED_UNION_ENUM)(name)char tagged_union_nil;, members \
+        ) \
+    }; \
+    TAGGED_UNION_REDUCE((TAGGED_UNION_GETTER_AND_SETTER)(name), members)
 
 #define TAGGED_UNION_UNION(_, member) TAGGED_UNION_UNWRAP member;
 
