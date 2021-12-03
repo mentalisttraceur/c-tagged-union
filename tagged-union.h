@@ -20,7 +20,7 @@
         } \
         unsafe; \
     }; \
-    struct tagged_union_tags_##name \
+    struct TAGGED_UNION_CATENATE(tagged_union_tags_, name) \
     { \
         TAGGED_UNION_REDUCE( \
             (TAGGED_UNION_ENUM)(name)char tagged_union_nil;, members \
@@ -99,6 +99,7 @@
         (TAGGED_UNION_FIRST(TAGGED_UNION_DELETE macro_state_result), x)
 
 #define tagof(name, member) \
-    (int )offsetof(struct tagged_union_tags_##name, member)
+    (int ) \
+    offsetof(struct TAGGED_UNION_CATENATE(tagged_union_tags_, name), member)
 
 #endif /* TAGGED_UNION_H */

@@ -5,7 +5,8 @@
 
 struct b { int b; };
 
-DEFINE_UNION(my_union,
+#define SHOULD_GET_EXPANDED my_union
+DEFINE_UNION(SHOULD_GET_EXPANDED,
     ((int) x)
     ((struct b) y)
     ((char *) z)
@@ -43,7 +44,7 @@ void test_evaluated_only_once(union my_union m)
 }
 
 
-const int xtag = tagof(my_union, x);
+const int xtag = tagof(SHOULD_GET_EXPANDED, x);
 const int ytag = tagof(my_union, y);
 const int ztag = tagof(my_union, z);
 
@@ -53,7 +54,7 @@ int main(int argc, char * * argv)
     union my_union m;
     struct b b = {13};
     int x, x2;
-    if(tagof(my_union, x) == 1) fputs("tagof x\n", stdout);
+    if(tagof(SHOULD_GET_EXPANDED, x) == 1) fputs("tagof x\n", stdout);
     if(tagof(my_union, y) == 2) fputs("tagof y\n", stdout);
     if(tagof(my_union, z) == 3) fputs("tagof z\n", stdout);
     if(xtag == 1) fputs("tagof x constant expression\n", stdout);
