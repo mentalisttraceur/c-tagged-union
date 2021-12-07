@@ -92,9 +92,7 @@
 #define TAGGED_UNION_CLOSE(x) , x)
 
 #define TAGGED_UNION_STEP(macro_state_result, x) \
-    (TAGGED_UNION_FIRST(macro_state_result)) \
-    (TAGGED_UNION_FIRST(TAGGED_UNION_DELETE macro_state_result)) \
-    TAGGED_UNION_DELETE TAGGED_UNION_DELETE macro_state_result \
+    macro_state_result \
     TAGGED_UNION_FIRST(macro_state_result) \
         (TAGGED_UNION_FIRST(TAGGED_UNION_DELETE macro_state_result), x)
 
