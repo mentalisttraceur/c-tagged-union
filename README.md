@@ -120,9 +120,8 @@ to zero, for example by `calloc`, `memset`, or setting
 The zero tag is specifically reserved for this purpose:
 no member will ever be assigned tag value zero.
 
-Tag values are compile-time constant, non-zero, start
-at one for the first member of a union, and count up
-by one for each member.
+Tag values are compile-time constant, start at one
+in each union, and count up by one for each member.
 
 The `tagof` macro takes the name of the tagged union
 type and the name of one of its members, and expands
