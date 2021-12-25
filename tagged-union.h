@@ -22,9 +22,8 @@
     }; \
     struct TAGGED_UNION_CATENATE(tagged_union_tags_, name) \
     { \
-        TAGGED_UNION_REDUCE( \
-            (TAGGED_UNION_ENUM)(name)char tagged_union_nil;, members \
-        ) \
+        char tagged_union_nil; \
+        TAGGED_UNION_REDUCE((TAGGED_UNION_ENUM)(name), members) \
     }; \
     TAGGED_UNION_REDUCE((TAGGED_UNION_GETTER_AND_SETTER)(name), members)
 
