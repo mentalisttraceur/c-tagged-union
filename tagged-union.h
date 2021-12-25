@@ -14,7 +14,7 @@
             int tag; \
             union \
             { \
-                TAGGED_UNION_REDUCE((TAGGED_UNION_UNION)(name), members) \
+                TAGGED_UNION_REDUCE(TAGGED_UNION_UNION, name, members) \
             } \
             value; \
         } \
@@ -23,9 +23,9 @@
     struct TAGGED_UNION_CATENATE(tagged_union_tags_, name) \
     { \
         char tagged_union_nil; \
-        TAGGED_UNION_REDUCE((TAGGED_UNION_ENUM)(name), members) \
+        TAGGED_UNION_REDUCE(TAGGED_UNION_ENUM, name, members) \
     }; \
-    TAGGED_UNION_REDUCE((TAGGED_UNION_GETTER_AND_SETTER)(name), members)
+    TAGGED_UNION_REDUCE(TAGGED_UNION_GETTER_AND_SETTER, name, members)
 
 #define TAGGED_UNION_UNION(_, member) TAGGED_UNION_UNWRAP member;
 
@@ -60,11 +60,11 @@
 #define TAGGED_UNION_FIRST(sequence) TAGGED_UNION_FIRST_ sequence)
 #define TAGGED_UNION_FIRST_(x) x TAGGED_UNION_DELETE(
 
-#define TAGGED_UNION_REDUCE(macro_state_result, sequence) \
+#define TAGGED_UNION_REDUCE(macro, parameter, sequence) \
     TAGGED_UNION_SCAN(TAGGED_UNION_SCAN(TAGGED_UNION_SCAN( \
         TAGGED_UNION_DELETE TAGGED_UNION_DELETE \
             TAGGED_UNION_WALK(TAGGED_UNION_OPEN_1 sequence) \
-            macro_state_result \
+            (macro)(parameter) \
             TAGGED_UNION_WALK(TAGGED_UNION_CLOSE_1 sequence) \
     )))
 #define TAGGED_UNION_SCAN(x) x
@@ -90,10 +90,10 @@
 #define TAGGED_UNION_CLOSE_2_END
 #define TAGGED_UNION_CLOSE(x) , x)
 
-#define TAGGED_UNION_STEP(macro_state_result, x) \
-    macro_state_result \
-    TAGGED_UNION_FIRST(macro_state_result) \
-        (TAGGED_UNION_FIRST(TAGGED_UNION_DELETE macro_state_result), x)
+#define TAGGED_UNION_STEP(macro_parameter_result, x) \
+    macro_parameter_result \
+    TAGGED_UNION_FIRST(macro_parameter_result) \
+        (TAGGED_UNION_FIRST(TAGGED_UNION_DELETE macro_parameter_result), x)
 
 #define tagof(name, member) \
     (int ) \
