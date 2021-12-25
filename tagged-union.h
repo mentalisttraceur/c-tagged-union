@@ -14,7 +14,7 @@
             int tag; \
             union \
             { \
-                TAGGED_UNION_REDUCE(TAGGED_UNION_UNION, name, members) \
+                TAGGED_UNION_MAP(TAGGED_UNION_UNION, name, members) \
             } \
             value; \
         } \
@@ -23,9 +23,9 @@
     struct TAGGED_UNION_CATENATE(tagged_union_tags_, name) \
     { \
         char tagged_union_nil; \
-        TAGGED_UNION_REDUCE(TAGGED_UNION_ENUM, name, members) \
+        TAGGED_UNION_MAP(TAGGED_UNION_ENUM, name, members) \
     }; \
-    TAGGED_UNION_REDUCE(TAGGED_UNION_GETTER_AND_SETTER, name, members)
+    TAGGED_UNION_MAP(TAGGED_UNION_GETTER_AND_SETTER, name, members)
 
 #define TAGGED_UNION_UNION(_, member) TAGGED_UNION_UNWRAP member;
 
@@ -60,7 +60,7 @@
 #define TAGGED_UNION_FIRST(sequence) TAGGED_UNION_FIRST_ sequence)
 #define TAGGED_UNION_FIRST_(x) x TAGGED_UNION_DELETE(
 
-#define TAGGED_UNION_REDUCE(macro, parameter, sequence) \
+#define TAGGED_UNION_MAP(macro, parameter, sequence) \
     TAGGED_UNION_SCAN(TAGGED_UNION_SCAN(TAGGED_UNION_SCAN( \
         TAGGED_UNION_DELETE TAGGED_UNION_DELETE \
             TAGGED_UNION_WALK(TAGGED_UNION_OPEN_1 sequence) \
