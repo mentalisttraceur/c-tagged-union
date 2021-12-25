@@ -14,7 +14,7 @@
             int tag; \
             union \
             { \
-                TAGGED_UNION_MAP(TAGGED_UNION_UNION, name, members) \
+                TAGGED_UNION_MAP(TAGGED_UNION_UNION, _, members) \
             } \
             value; \
         } \
@@ -23,7 +23,7 @@
     struct TAGGED_UNION_CATENATE(tagged_union_tags_, name) \
     { \
         char tagged_union_nil; \
-        TAGGED_UNION_MAP(TAGGED_UNION_ENUM, name, members) \
+        TAGGED_UNION_MAP(TAGGED_UNION_ENUM, _, members) \
     }; \
     TAGGED_UNION_MAP(TAGGED_UNION_GETTER_AND_SETTER, name, members)
 
