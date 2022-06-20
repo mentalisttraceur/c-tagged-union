@@ -49,9 +49,9 @@ static int my_union_get_foo(union my_union, int *) { /* ... */ }
 static int my_union_get_bar(union my_union, float * *) { /* ... */ }
 static int my_union_get_qux(union my_union, struct whatever *) { /* ... */ }
 
-static int my_union_set_foo(union * my_union, int) { /* ... */ }
-static float * my_union_set_bar(union * my_union, float *) { /* ... */ }
-static struct whatever my_union_set_qux(union * my_union, struct whatever) { /* ... */ }
+static int my_union_set_foo(union my_union *, int) { /* ... */ }
+static float * my_union_set_bar(union my_union *, float *) { /* ... */ }
+static struct whatever my_union_set_qux(union my_union *, struct whatever) { /* ... */ }
 ```
 
 The top-level type is `union` rather than `struct` because in the
