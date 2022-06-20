@@ -10,8 +10,8 @@ with automatic checking at compile-time and run-time.
 The implementation was written very carefully to not
 stray into unportable or undefined behavior at all.
 
-Performs just as good as a manual implementation
-with reasonable compiler optimizations turned on.
+Performs just as well as a manual implementation when
+reasonable compiler optimizations are turned on.
 
 
 ## Usage
